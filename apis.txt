@@ -1,0 +1,58 @@
+apis
+
+create user
+https://game.anomoz.com/api/allSet/post/user_create.php
+
+display all resturants
+http://game.anomoz.com/api/allSet/post/read_all_resturants.php
+
+create resturants
+http://game.anomoz.com/api/allSet/post/resturant_create.php
+
+see menus:
+http://game.anomoz.com/api/allSet/post/read_menu_of_resturant.php?resturantId=1
+
+add menu item:
+http://game.anomoz.com/api/allSet/post/create_menu_in_resturant.php
+
+//read menus and resturants
+http://game.anomoz.com/api/allSet/post/read_all_menu_and_resturants.php
+
+//insert booking
+http://game.anomoz.com/api/allSet/post/insert_booking.php
+
+[
+	{
+		"itemId": "1",
+		"cartId": "ahsan12",
+		"quantity": "2",
+		"timeAdded": 18237123
+	}
+]
+
+//read bookings of a user
+http://game.anomoz.com/api/allSet/post/read_bookings_of_user.php?userIdTag=1561801412669ahsan
+
+//get live bookings
+http://game.anomoz.com/api/allSet/post/read_live_resturant_bookings.php?resId=all
+
+//insert rating
+game.anomoz.com/api/allSet/post/insert_rating.php
+
+//send push notf to restursnts
+https://api.anomoz.com/api/allSet/post/sendNofttoRes.php?vendorId=1
+
+//email verification
+https://api.anomoz.com/api/allSet/post/send_verification_email.php?email=sa02908@st.habib.edu.pk
+
+
+// pages names
+dashboard = hotel
+menu = trips
+menu-item detail = trip-detail
+tabs = favourite list
+all bookings: booking list
+checkout = checkout-hotel
+
+    
+https://5d20f4eab57e3c0008e5c46d--cocky-stonebraker-0c1296.netlify.com/#/history/booking-list

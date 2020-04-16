@@ -1,0 +1,25 @@
+<!-- -->
+<ion-header class="no-shadow">
+
+  <ion-navbar class="no-border" color="primary">
+    <ion-title>
+      Maps
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content class="common-bg">
+  <!-- User settings-->
+  
+  <agm-map [latitude]="lat" [longitude]="lng">
+    <agm-marker *ngFor="let hotel of hotels;" [latitude]="hotel.location.lat" [longitude]="hotel.location.lon">
+      <agm-info-window>
+        <h3>
+          <strong>{{hotel.name}}</strong>
+        </h3>
+      </agm-info-window>
+    </agm-marker>
+  </agm-map>
+  
+</ion-content>

@@ -1,0 +1,8 @@
+{
+  "name": "QuiFood",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "id": "29adccd3"
+}

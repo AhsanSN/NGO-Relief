@@ -1,0 +1,145 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<div class="payment-frm">
+    <h5>Charge $25 USD with 2Checkout</h5>
+    
+    <!-- credit card form -->
+    <form id="paymentFrm" method="post">
+        <div>
+            <label>NAME</label>
+            <input type="text" name="name" id="name" placeholder="Enter name" required autofocus>
+        </div>
+        <div>
+            <label>EMAIL</label>
+            <input type="email" name="email" id="email" placeholder="Enter email" required>
+        </div>
+        <div>
+            <label>CARD NUMBER</label>
+            <input type="text" name="card_num" id="card_num" placeholder="Enter card number" autocomplete="off" required>
+        </div>
+        <div>
+            <label><span>EXPIRY DATE</span></label>
+            <input type="number" name="exp_month" id="exp_month" placeholder="MM" required>
+            <input type="number" name="exp_year" id="exp_year" placeholder="YY" required>
+        </div>
+        <div>
+            <label>CVV</label>
+            <input type="number" name="cvv" id="cvv" autocomplete="off" required>
+        </div>
+        
+        <!-- hidden token input -->
+        <input id="token" name="token" type="hidden" value="">
+        
+        <!-- submit button -->
+        <input type="submit" class="btn btn-success" value="Submit Payment">
+    </form>
+</div>
+	</body>
+
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+   <script src="https://www.2checkout.com/checkout/api/2co.min.js"></script>
+
+	<script>
+// Called when token created successfully.
+var successCallback = function(data) {
+  console.log("success", data.response.token.token)
+  /**
+  var myForm = document.getElementById('paymentFrm');
+  
+  // Set the token as the value for the token input
+  myForm.token.value = data.response.token.token;
+  
+  // Submit the form
+  myForm.submit();
+  **/
+  //create API request to my server
+  var userInfo = {
+    "token": data.response.token.token,
+    "card_no": $("#card_num").val(),
+    "card_cvv": $("#cvv").val(),
+    "card_exp_month": $("#exp_month").val(),
+    "card_exp_year": $("#exp_year").val(),
+  }
+
+  this.uploadUserToDatabase(userInfo);
+
+};
+
+// Called when token creation fails.
+var errorCallback = function(data) {
+  console.log("fail")
+  if (data.errorCode === 200) {
+    tokenRequest();
+  } else {
+    alert(data.errorMsg);
+  }
+};
+
+var tokenRequest = function() {
+  // Setup token request arguments
+  var args = {
+    sellerId: "901411125",
+    publishableKey: "A3FD0CF9-2DDA-4C20-ACC1-E12300DA5A04",
+    ccNo: $("#card_num").val(),
+    cvv: $("#cvv").val(),
+    expMonth: $("#exp_month").val(),
+    expYear: $("#exp_year").val()
+  };
+  
+
+  // Make the token request
+  TCO.requestToken(successCallback, errorCallback, args);
+
+};
+
+$(function() {
+  // Pull in the public encryption key for our environment
+  TCO.loadPubKey('sandbox');
+  
+  $("#paymentFrm").submit(function(e) {
+    // Call our token request function
+    tokenRequest();
+   
+    // Prevent form from submitting
+    return false;
+  });
+});
+
+
+function uploadUserToDatabase(aboutUser){
+    var _this = this;
+         var InitiateUploadUser = function(callback) // How can I use this callback?
+          {
+              var request = new XMLHttpRequest();
+              request.onreadystatechange = function()
+              {
+                  if (request.readyState == 4 && request.status == 200)
+                  {
+                      callback(request.responseText); // Another callback here
+                  }
+                  if (request.readyState == 4 && request.status == 0)
+                  {
+                      console.log("no respinse for creating account") // Another callback here
+                      //document.getElementById("noInternet").style.display = "block";
+                  }
+              }; 
+              request.open("POST", "https://game.anomoz.com/api/allSet/post/my2CheckoutApi.php")
+              request.send(JSON.stringify(aboutUser));
+          }
+          var frameUploadUser = function mycallback(data) {
+            console.log("user received from server," , data)
+
+            
+            //_this.hotelService.storeSignupData(_this.name, _this.email, _this.password, _this.userIdTag);
+            //redirect to home
+            //_this.nav.setRoot('page-hotel');
+          }
+
+          InitiateUploadUser(frameUploadUser); //passing mycallback as a method  
+        }
+
+</script>
+</html>

@@ -1,0 +1,31 @@
+<ion-split-pane when="lg" color="dark" style="height: 100%">
+<!--
+  <ion-menu side="left" id="authenticated" [content]="content" color="dark" style="height: 100%">
+    <ion-header style="height: 100%">
+      <ion-toolbar class="user-profile" style="height: 100%">
+
+        <ion-fab top right class="hideLg">
+          <button ion-fab mini  menuClose>
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-fab>
+
+        <ion-grid >
+          
+       
+
+          <ion-row>
+            <button ion-button (click)="logout()" full>Logout</button>
+          </ion-row>
+
+        </ion-grid>
+
+      </ion-toolbar>
+    </ion-header>
+
+
+  </ion-menu>
+-->
+  <ion-nav [root]="rootPage" main #content swipeBackEnabled="false"></ion-nav>
+
+</ion-split-pane>
