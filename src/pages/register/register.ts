@@ -89,7 +89,7 @@ export class RegisterPage implements OnInit {
                       //document.getElementById("noInternet").style.display = "block";
                   }
               }; 
-              request.open("POST", "https://api.anomoz.com/api/allSet/post/user_create.php")
+              request.open("POST", "https://api.anomoz.com/api/ngo-relief/post/user_create.php")
               request.send(JSON.stringify(aboutUser));
           }
           var frameUploadUser = function mycallback(data) {
@@ -98,37 +98,7 @@ export class RegisterPage implements OnInit {
             
             _this.hotelService.storeSignupData(_this.name, _this.email, _this.password, _this.userIdTag);
             //redirect to home
-            _this.sendVerificationEmail()
-          }
-
-          InitiateUploadUser(frameUploadUser); //passing mycallback as a method  
-  }
-
-  sendVerificationEmail(){
-    var _this2 = this;
-         var InitiateUploadUser = function(callback) // How can I use this callback?
-          {
-              var request = new XMLHttpRequest();
-              request.onreadystatechange = function()
-              {
-                  if (request.readyState == 4 && request.status == 200)
-                  {
-                      callback(request.responseText); // Another callback here
-                  }
-                  if (request.readyState == 4 && request.status == 0)
-                  {
-                      console.log("no respinse for creating account") // Another callback here
-                      //document.getElementById("noInternet").style.display = "block";
-                  }
-              }; 
-              request.open("POST", "https://api.anomoz.com/api/allSet/post/send_verification_email.php?email="+_this2.email)
-              request.send();
-          }
-          var frameUploadUser = function mycallback(data) {
-            console.log("user received from server," , data)
-
-            //redirect to home
-            _this2.nav.setRoot('page-hotel');
+            _this.nav.setRoot('page-hotel');
           }
 
           InitiateUploadUser(frameUploadUser); //passing mycallback as a method  

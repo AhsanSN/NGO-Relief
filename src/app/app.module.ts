@@ -16,14 +16,6 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {Keyboard} from '@ionic-native/keyboard';
 
 import {HotelService} from "../providers/hotel-service";
-//import {PlaceService} from "../providers/place-service";
-//import {ActivityService} from "../providers/activity-service";
-//import {CarService} from "../providers/car-service";
-//import {TripService} from "../providers/trip-service";
-//import {WeatherProvider} from '../providers/weather';
-//import {MessageService} from '../providers/message-service-mock';
-import { FavoriteListPage } from '../pages/favorite-list/favorite-list';
-
 import {ionBookingApp} from "./app.component";
 import { MyDataServiceProvider } from '../providers/my-data-service/my-data-service';
 import { HotelPage } from "../pages/hotel/hotel";
@@ -31,8 +23,6 @@ import { HotelPage } from "../pages/hotel/hotel";
 
 
 import { HotelPageModule } from '../pages/hotel/hotel.module';
-import { FavoriteListPageModule } from '../pages/favorite-list/favorite-list.module';
-
 import { IonicImageLoader } from 'ionic-image-loader';
 import { Device } from '@ionic-native/device';
 
@@ -47,7 +37,6 @@ import { Device } from '@ionic-native/device';
     //HotelPage,
     //FavoriteListPage,
     HotelPageModule,
-    FavoriteListPageModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(
@@ -69,7 +58,6 @@ import { Device } from '@ionic-native/device';
   bootstrap: [IonicApp],
   entryComponents: [
     ionBookingApp,
-    FavoriteListPage,
     HotelPage,
     //BookingListPage
   ],

@@ -5,7 +5,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { FavoriteListPage } from '../pages/favorite-list/favorite-list';
+import { HotelPage } from '../pages/hotel/hotel';
 import { ImageLoaderConfig } from 'ionic-image-loader';
 import { Storage } from '@ionic/storage';
 
@@ -27,7 +27,7 @@ export class ionBookingApp {
   @ViewChild(Nav) nav: Nav;
 
   //rootPage: any = "page-hotel";
-  rootPage:any = FavoriteListPage;
+  rootPage:any = HotelPage;
   showMenu: boolean = true;
   // rootNavCtrl: NavController;
 

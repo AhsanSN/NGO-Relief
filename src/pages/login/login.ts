@@ -62,9 +62,7 @@ export class LoginPage implements OnInit {
              }
          }; 
          //console.log("sending _this.userIdTag to server", userIdTag)
-         console.log("sending request", "https://game.anomoz.com/api/allSet/post/get_user.php?email="+email+"&password="+password);
-
-         request.open("POST", "https://game.anomoz.com/api/allSet/post/get_user.php?email="+email+"&password="+password);
+         request.open("POST", "https://api.anomoz.com/api/ngo-relief/post/get_user.php?email="+email+"&password="+password);
          request.send();
      }
      
