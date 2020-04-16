@@ -83,11 +83,11 @@ ion-header .toolbar {
 }
 
 .profile-bg {
-  background-image: linear-gradient(135deg, #271b38, #563d7c, #7952b3);
+  background-image: linear-gradient(135deg, #271b38, #005cdf, #7952b3);
 }
 
 .refresh-bg {
-  background-color: linear-gradient(135deg, #271b38, #563d7c, #7952b3);
+  background-color: linear-gradient(135deg, #271b38, #005cdf, #7952b3);
 }
 //
 //
@@ -363,7 +363,7 @@ ion-navbar.no-border {
 
 // style for auth pages
 .auth-page {
-  background-image: linear-gradient(135deg, #271b38, #563d7c, #7952b3);
+  background-image: linear-gradient(135deg, #0050c1, #0069ff, #004dbb);
   &::after {
     content: "";
     background: url("../assets/img/bg.jpg") no-repeat;
@@ -457,7 +457,7 @@ ion-navbar.no-border {
     background-size: 100%;
   }
   .toolbar-background {
-    background-image: linear-gradient(135deg, #271b38, #563d7c, #7952b3);
+    background-image: linear-gradient(135deg, #271b38, #005cdf, #7952b3);
   }
 
   .other-data {

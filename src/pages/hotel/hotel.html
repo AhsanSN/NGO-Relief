@@ -3,15 +3,12 @@
     <ion-navbar class="no-border" color="primary">
       
       <ion-title>
-          <ion-searchbar [(ngModel)]="resturantNameSearch" (ionInput)="searchResturants()" (ionCancel)="showItems = !showItems" autocomplete="on" autocorrect="on" spellcheck="true" animated="true" placeholder="Resturant"></ion-searchbar>
+        Home
       </ion-title>
       
       <ion-buttons end>
-          <button ion-button (click)="refresh()">
-            <ion-icon slot="icon-only" name="refresh"></ion-icon>
-          </button>
-
-      </ion-buttons>
+        <button ion-button (click)="about()">About</button>
+    </ion-buttons>
       
     </ion-navbar>
   </ion-header>
@@ -19,35 +16,5 @@
 
 <ion-content class="animated fadeIn common-bg" >
 
-
-  <!--list of hotels-->
-  <ion-grid class="list-hotels" no-padding>
-    <ion-row no-padding>
-      <ion-col no-padding tappable col-12 col-md-6 col-lg-6 col-xl-4 *ngFor="let hotel of hotels" (click)="viewHotel(hotel)">
-        <div class="hotel-bg" [ngStyle]="{'background-image': 'url(' + hotel.thumb + ')'}">
-          <div class="bg-filter">
-            <div class="bottom-info">
-                <div>
-                    <div class="pull-left">
-                      <h5 ion-text class="text-white">{{ hotel.name }}</h5>
-                    </div>
-                    
-                    <div class="clear"></div>
-                  </div>
-
-              <div>
-                <div class="pull-left">
-                  <ion-badge class="square" color="secondary">{{ hotel.rating }}</ion-badge>
-                  <span class="rating-label text-white" ion-text> of 5 - Rating</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </ion-col>
-        <h4 *ngIf="!hotels || hotels.length==0">Error occurred. Please refresh.</h4>
-    </ion-row>
-  </ion-grid>
 
 </ion-content>
