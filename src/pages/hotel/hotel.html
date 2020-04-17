@@ -1,20 +1,64 @@
 <ion-header class="animated fadeIn no-shadow">
-
     <ion-navbar class="no-border" color="primary">
-      
       <ion-title>
-        Home
+        {{ngoName}}
       </ion-title>
-      
       <ion-buttons end>
         <button ion-button (click)="about()">About</button>
-    </ion-buttons>
-      
+      </ion-buttons>
     </ion-navbar>
   </ion-header>
 
 
 <ion-content class="animated fadeIn common-bg" >
+  <h1 style='text-align: center;color: white;font-family: "Lucida Console", Courier, monospace;'>Submit Entry</h1>
 
+  <form [formGroup]="onLoginForm" class="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Person Name" formControlName="name"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="CNIC" formControlName="cnic" (keyup)="searchCnic()"></ion-input>
+        </ion-col>
+      </ion-row>
+      <p id="cnicError" style="display: none;">CNIC exists in database.</p>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Phone Number" formControlName="phone"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Address" formControlName="address"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Profession" formControlName="profession"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Number of family members" formControlName="nFamily"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Reference" formControlName="reference"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Collection Center" formControlName="collectionCenter"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <button ion-button full color="dark" (click)="sendEntry(onLoginForm.get('name').value, onLoginForm.get('cnic').value, onLoginForm.get('phone').value, onLoginForm.get('address').value, onLoginForm.get('profession').value, onLoginForm.get('nFamily').value, onLoginForm.get('reference').value, onLoginForm.get('collectionCenter').value)"><span class="text">Submit to Database</span></button>    
+  </form>
 
 </ion-content>

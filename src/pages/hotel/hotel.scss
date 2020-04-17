@@ -11,3 +11,60 @@ page-hotel,
   	}
   }
 }
+
+
+
+
+.content {
+  background: #3c5fff ;
+  background-size: 75px;
+  height: 100%;
+  width: 100%;
+  transition: .3s .2s;
+}
+
+.content.background {
+  background: #3c5fff ;
+  background-size: 75px;
+}
+
+form {
+  width: 95%;
+  margin: auto;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  transition: .3s .6s;
+}
+
+input {
+  display: inline-block;
+  background: #F9F9F9;
+  width: 90%;
+  margin: 15px auto;
+  border: 0;
+  border-bottom: 1px solid lightgrey;
+  padding: 12px 0;
+  outline: 0;
+  font-size: 15px;
+}
+
+
+
+
+ion-input{
+  padding: 4px;
+width: 100%;
+border: 2px solid
+#3c5fff;
+border-radius: 10px;
+box-shadow: 5px 5px 2px gray;
+box-shadow: 0 1px 5px 0
+rgba(0, 0, 0, 0.2), 0 4px 10px 0 rgba(0, 0, 0, 0.19);
+color: black;
+background-color: #fff;
+}
+
+.startPara{
+  margin-top: 70px;padding: 0 10px;justify-content: center;color:white;text-align: center;background: center;background-color: rgba(0, 0, 0, 0);background-color:#2b46c4;padding: 20px 10px 700px 10px;margin-right: 12px;margin-left: 12px;border-radius: 10px;
+}
