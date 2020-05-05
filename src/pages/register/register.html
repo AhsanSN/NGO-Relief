@@ -12,32 +12,24 @@
 
     <!-- Register form -->
     <form [formGroup]="onRegisterForm" class="list-form">
-      <ion-item>
-        <ion-label floating>
-          <ion-icon name="person" item-start class="text-white"></ion-icon>
-          Name
-        </ion-label>
-        <ion-input type="text" formControlName="fullName" required></ion-input>
-      </ion-item>
-      <p ion-text color="danger" class="text-1x has-error" *ngIf="onRegisterForm.get('fullName').touched && onRegisterForm.get('fullName').hasError('required')">This field is required</p>
 
-      <ion-item>
-        <ion-label floating>
-          <ion-icon name="mail" item-start class="text-white"></ion-icon>
-          Email
-        </ion-label>
-        <ion-input type="email" formControlName="email" required></ion-input>
-      </ion-item>
-      <p ion-text color="danger" class="text-1x has-error" *ngIf="onRegisterForm.get('email').touched && onRegisterForm.get('email').hasError('required')">This field is required</p>
-
-      <ion-item>
-        <ion-label floating>
-          <ion-icon name="lock" item-start class="text-white"></ion-icon>
-          Password
-        </ion-label>
-        <ion-input type="password" formControlName="password" required></ion-input>
-      </ion-item>
-      <p ion-text color="danger" class="text-1x has-error" *ngIf="onRegisterForm.get('password').touched && onRegisterForm.get('password').hasError('required')">This field is required</p>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-12>
+            <ion-input placeholder="Name" formControlName="fullName" required></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-12>
+            <ion-input placeholder="Email" formControlName="email" required></ion-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-12>
+            <ion-input placeholder="Password" formControlName="password" required></ion-input>
+          </ion-col>
+        </ion-row>
+        </ion-grid>        
     </form>
 
     <div margin-top>

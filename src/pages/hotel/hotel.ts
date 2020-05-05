@@ -6,6 +6,7 @@ import { Geolocation } from "@ionic-native/geolocation";
 import { App } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { BaseRequestOptions } from "@angular/http";
 
 
 @IonicPage({
@@ -21,6 +22,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class HotelPage implements OnInit{
 
   public onLoginForm: FormGroup;
+  //https://api.anomoz.com/api/ngo-relief/post/read_all_campaigns.php?orgId=4
   
   // Map
   lat: number = -22.9068;
@@ -29,6 +31,10 @@ export class HotelPage implements OnInit{
   ngoName: string = "";
   collectionCenter = ""
   reference = ""
+  event = ""
+  eventId = ""
+  allEvents: any;
+  campaigns: any= [];
 
   constructor(public storage: Storage, public app: App, private _fb: FormBuilder, public nav: NavController, public navParams: NavParams, public hotelService: HotelService, public platform: Platform, public actionSheetController: ActionSheetController, public geo: Geolocation, public toastCtrl: ToastController, ) {
     this.storage.get('ngo_relief_data_collected').then((val) => {
@@ -39,6 +45,8 @@ export class HotelPage implements OnInit{
         console.log("val", val)
         this.collectionCenter = val.collectionCenter;
         this.reference = val.reference;
+        this.event = val.event;
+        this.eventId = val.eventId;
         this.onLoginForm.setValue({
          "name": "",
          "cnic": "",
@@ -48,7 +56,28 @@ export class HotelPage implements OnInit{
          "nFamily": "",
          "collectionCenter":this.collectionCenter,
          "reference":this.reference,
+         "eligibleforZakat": "",
+         "income": "",
+         "CampaignID":val.CampaignID
         })
+
+
+        this.allEvents = [];
+
+        for (var i=0; i<10; i++){
+          var eventTitle = "event " + i;
+          this.allEvents.push(
+            {
+              text: eventTitle,
+              role: 'destructive',
+              handler: () => {
+                this.changeEventMain(eventTitle, i);
+              }
+            }
+          )
+        }
+
+
       }
     }); 
   }
@@ -78,6 +107,15 @@ export class HotelPage implements OnInit{
       ])],
       collectionCenter: [this.collectionCenter, Validators.compose([
         Validators.required
+      ])],
+      eligibleforZakat: ["", Validators.compose([
+        Validators.required
+      ])],
+      income: ["", Validators.compose([
+        Validators.required
+      ])],
+      CampaignID: ["", Validators.compose([
+        Validators.required
       ])]
     });
   }
@@ -95,19 +133,30 @@ export class HotelPage implements OnInit{
         
     this.storage.get('userBasicInfo').then((val) => {
       console.log("account value found", val)
-      this.ngoName = val.name;
     if (val===null){
       //console.log("no account found. Error!!!", val);
-      this.nav.setRoot('page-register');
+      this.nav.setRoot('page-login');
+    }else{
+      this.ngoName = val.name;
     }      
     });
 
     var _this22 = this;
     setTimeout(function(){
+      _this22.campaigns = _this22.hotelService.campaigns
+    }, 1000);
+
+    setTimeout(function(){
+      _this22.campaigns = _this22.hotelService.campaigns
+    }, 2000);
+
+    setTimeout(function(){
       _this22.cnics = [];
       _this22.hotelService.cnics.forEach(element => {
         _this22.cnics.push(element.cnic);
       });
+
+      _this22.campaigns = _this22.hotelService.campaigns
     }, 4000);
 
     setTimeout(function(){
@@ -132,7 +181,7 @@ export class HotelPage implements OnInit{
     }
 
 
-    sendEntry(name, cnic, phone, address, profession, nFamily, reference, collectionCenter){
+    sendEntry(name, cnic, phone, address, profession, nFamily, reference, collectionCenter, eligibleforZakat, income, CampaignID){
 
       this.geo.getCurrentPosition().then((resp) => {
         console.log("location:", resp.coords.latitude, resp.coords.longitude)
@@ -147,7 +196,12 @@ export class HotelPage implements OnInit{
           "reference": reference,
           "collectionCenter": collectionCenter,
           "lat": resp.coords.latitude,
-          "lng": resp.coords.longitude
+          "lng": resp.coords.longitude,
+          "event": this.event, 
+          "eventId": this.eventId,
+          "eligibleforZakat": eligibleforZakat, 
+          "income": income,
+          "CampaignID": CampaignID
         }
         console.log("details", details)
         this.storage.set('ngo_relief_data_collected', details);
@@ -190,6 +244,20 @@ export class HotelPage implements OnInit{
           });
       
           toast.present();
+          _this3.onLoginForm.setValue({
+            "name": "",
+            "cnic": "",
+            "phone": "",
+            "address": aboutUser.address,
+            "profession": "",
+            "nFamily": "",
+            "collectionCenter":aboutUser.collectionCenter,
+            "reference":aboutUser.reference,
+            "eligibleforZakat": "",
+            "income": "",
+            "CampaignID": aboutUser.CampaignID
+           })
+
         }
         InitiateUploadUser(frameUploadUser); //passing mycallback as a method  
   }
@@ -198,6 +266,30 @@ export class HotelPage implements OnInit{
       this.nav.push("page-about")
     }
 
+
+    changeEvent(){
+      console.log("changeEvent called")
+      this.showAllEvents()
+    }
+  
+    async showAllEvents() {
+      console.log("this.allEvents", this.allEvents)
+
+      const actionSheet = await this.actionSheetController.create(
+        {
+        buttons: this.allEvents
+      });
+      await actionSheet.present();
+      
+    }
+
+
+    changeEventMain(event, eventId){
+      console.log("changeEventMain called", event, eventId)
+      this.event = event
+      this.eventId = eventId
+      
+    }
 
    
 

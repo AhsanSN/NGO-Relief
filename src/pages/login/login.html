@@ -12,26 +12,23 @@
 
     <!-- Login form -->
     <form [formGroup]="onLoginForm" class="list-form">
-      <ion-item>
-        <ion-label floating>
-          <ion-icon name="mail" item-start class="text-white"></ion-icon>
-          Email
-        </ion-label>
-        <ion-input type="email" formControlName="email"></ion-input>
-      </ion-item>
-      <p ion-text color="danger" class="text-1x has-error" *ngIf="onLoginForm.get('email').touched && onLoginForm.get('email').hasError('required')">This field is required</p>
-
-      <ion-item>
-        <ion-label floating>
-          <ion-icon name="lock" item-start class="text-white"></ion-icon>
-          Password
-        </ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
-      </ion-item>
-      <p ion-text color="danger" class="text-1x has-error" *ngIf="onLoginForm.get('password').touched && onLoginForm.get('password').hasError('required')">This field is required</p>
+      <ion-grid style="margin-top: 30px;">
+        <ion-row>
+          <ion-col col-12>
+            <ion-input placeholder="Email" formControlName="email" required></ion-input>
+          </ion-col>
+        </ion-row>
+        <br style="margin-top: 10px;">
+        <ion-row>
+          <ion-col col-12>
+            <ion-input placeholder="Password" formControlName="password" required></ion-input>
+          </ion-col>
+        </ion-row>
+        </ion-grid>
     </form>
+    <br>
 
-    <div>
+    <div style="margin: 10px;">
       <button ion-button icon-start block color="dark" tappable (click)="login(onLoginForm.get('email').value, onLoginForm.get('password').value)" [disabled]="!onLoginForm.valid">
         <ion-icon name="log-in"></ion-icon>
         SIGN IN
@@ -39,11 +36,6 @@
 
     </div>
 
-
-    <!-- Other links -->
-    <div text-center margin-top>
-      <span ion-text color="light" tappable (click)="register()">New here? <strong>Sign up</strong></span>
-    </div>
 
   </div>
 </ion-content>

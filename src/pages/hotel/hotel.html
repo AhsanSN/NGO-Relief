@@ -56,9 +56,46 @@
           <ion-input placeholder="Collection Center" formControlName="collectionCenter"></ion-input>
         </ion-col>
       </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <!--
+          <ion-input placeholder="eligibleforZakat" formControlName="eligibleforZakat"></ion-input>
+          -->
+          <ion-select formControlName="eligibleforZakat" placeholder="Eligible for Zakat">
+            <ion-option value="yes">Yes</ion-option>
+            <ion-option value="no">No</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <!--
+          <ion-input placeholder="eligibleforZakat" formControlName="eligibleforZakat"></ion-input>
+          -->
+          <ion-select formControlName="CampaignID" placeholder="Campaign">
+            <ion-option *ngFor="let key of campaigns" value="{{key.CampaignID}}">{{key.title}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Income" formControlName="income"></ion-input>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
-    <button ion-button full color="dark" (click)="sendEntry(onLoginForm.get('name').value, onLoginForm.get('cnic').value, onLoginForm.get('phone').value, onLoginForm.get('address').value, onLoginForm.get('profession').value, onLoginForm.get('nFamily').value, onLoginForm.get('reference').value, onLoginForm.get('collectionCenter').value)"><span class="text">Submit to Database</span></button>    
+    <ion-row>
+      <button ion-button full color="dark" (click)="sendEntry(onLoginForm.get('name').value, onLoginForm.get('cnic').value, onLoginForm.get('phone').value, onLoginForm.get('address').value, onLoginForm.get('profession').value, onLoginForm.get('nFamily').value, onLoginForm.get('reference').value, onLoginForm.get('collectionCenter').value, onLoginForm.get('eligibleforZakat').value, onLoginForm.get('income').value,  onLoginForm.get('CampaignID').value)"><span class="text">Submit</span></button>    
+
+      <!--
+      <ion-col col-8>
+        <button ion-button full (click)="changeEvent()">{{event}}</button>
+      </ion-col>
+      <ion-col col-4>
+      </ion-col>
+      -->
+    </ion-row>
+    
   </form>
 
 </ion-content>

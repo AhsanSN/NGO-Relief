@@ -5,6 +5,8 @@ import { Storage } from '@ionic/storage';
 export class HotelService {
   cnics: any;
   cnicsTemp: any;
+  campaigns: any;
+  campaignsTemp: any;
   account: any = "";
 
   name: string;
@@ -20,7 +22,7 @@ export class HotelService {
     this.checkifAccount();
     this.cnics = []
     this.getCNICsFromServer();
-        
+    this.getCampaignsFromServer();    
   }
 
   checkifAccount(){
@@ -87,6 +89,56 @@ export class HotelService {
           //add to local storage
           _this.cnics = _this.cnicsTemp
           console.log("cnics updated", _this.cnics)
+          //_this.storage.set('resturants', _this.hotels);
+       }
+     }
+     InitiateGetTransactions(frameTransactions); //passing mycallback as a method 
+  }
+
+  getCampaignsFromServer(){
+    var InitiateGetTransactions = function(callback) // How can I use this callback?
+     {
+         var request = new XMLHttpRequest();
+         request.onreadystatechange = function()
+         {
+             if (request.readyState == 4 && request.status == 200)
+             {
+                 callback(request.responseText); // Another callback here
+             }
+             if (request.readyState == 4 && request.status == 0)
+             {
+                 //console.log("no response for resturants") // Another callback here
+             }
+         }; 
+         //console.log("sending _this.userIdTag to server", userIdTag)
+         request.open("POST", "https://api.anomoz.com/api/ngo-relief/post/read_all_campaigns.php?orgId=4");
+         request.send();
+     }
+     
+     var _this = this;
+     var frameTransactions = function mycallback(data) {
+      _this.campaignsTemp = []
+       console.log("campaigns received from server," , data)
+       var dataParsed;
+       dataParsed = JSON.parse(data);
+       if(dataParsed.message=="none"){
+         //console.log("no bookings")
+       }
+       else{
+         var sampleTrans = dataParsed
+           //console.log(sampleTrans)
+           for (var i=0; i<sampleTrans.length; i++){
+            //check if hotel already
+              var a = {
+                CampaignID: sampleTrans[i].CampaignID,
+                title: sampleTrans[i].title,
+            }
+            _this.campaignsTemp.push(a)
+          	
+          }
+          //add to local storage
+          _this.campaigns = _this.campaignsTemp
+          console.log("campaigns updated", _this.campaigns)
           //_this.storage.set('resturants', _this.hotels);
        }
      }
