@@ -5,7 +5,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Keyboard } from '@ionic-native/keyboard';
 
-import { HotelPage } from '../pages/hotel/hotel';
+//import { HotelPage } from '../pages/hotel/hotel';
+import { HomePage } from '../pages/home/home';
 import { ImageLoaderConfig } from 'ionic-image-loader';
 import { Storage } from '@ionic/storage';
 
@@ -27,7 +28,7 @@ export class ionBookingApp {
   @ViewChild(Nav) nav: Nav;
 
   //rootPage: any = "page-hotel";
-  rootPage:any = HotelPage;
+  rootPage:any = HomePage;
   showMenu: boolean = true;
   // rootNavCtrl: NavController;
 

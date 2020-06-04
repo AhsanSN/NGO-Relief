@@ -1,0 +1,46 @@
+<ion-header class="animated fadeIn no-shadow">
+    <ion-navbar class="no-border" color="primary">
+      <ion-title>
+        {{ngoName}}
+      </ion-title>
+      <ion-buttons end>
+        <button ion-button (click)="about()">About</button>
+      </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content class="animated fadeIn common-bg" >
+  <h1 style='text-align: center;color: white;font-family: "Lucida Console", Courier, monospace;'>Set Defaults</h1>
+
+  <form [formGroup]="onLoginForm" class="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-input placeholder="Collection Center" formControlName="collectionCenter"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-select formControlName="CampaignID" placeholder="Campaign">
+            <ion-option *ngFor="let key of campaigns" value="{{key.CampaignID}}">{{key.title}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-row>
+      <button ion-button full color="dark" (click)="sendEntry(  onLoginForm.get('collectionCenter').value, onLoginForm.get('CampaignID').value)"><span class="text">Save and Move to Form</span></button>    
+
+      <!--
+      <ion-col col-8>
+        <button ion-button full (click)="changeEvent()">{{event}}</button>
+      </ion-col>
+      <ion-col col-4>
+      </ion-col>
+      -->
+    </ion-row>
+    
+  </form>
+
+</ion-content>

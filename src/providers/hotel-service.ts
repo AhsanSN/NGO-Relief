@@ -7,6 +7,8 @@ export class HotelService {
   cnicsTemp: any;
   campaigns: any;
   campaignsTemp: any;
+  professions: any;
+  professionsTemp: any;
   account: any = "";
 
   name: string;
@@ -18,11 +20,30 @@ export class HotelService {
   myLng: number;
   myLat: number;
 
+  base64img:string='';
+  url:'https://projects.anomoz.com/fooPan/imageUpload.php';
+
   constructor(public storage: Storage) {
     this.checkifAccount();
     this.cnics = []
+    /**
+    this.cnics = [{
+      'name': 'ahsan ahmed',
+      'phone': '03362736273',
+      'address': 'home',
+      'profession': '1',
+      'nFamily': '3',
+      'reference': 'none',
+      'cnic': 123,
+      'eligibleforZakat': 'no',
+      'income': 52000
+    }]
+     */
+
     this.getCNICsFromServer();
-    this.getCampaignsFromServer();    
+    this.getCampaignsFromServer();  
+    this.getProfessionsFromServer();    
+
   }
 
   checkifAccount(){
@@ -82,6 +103,14 @@ export class HotelService {
             //check if hotel already
               var a = {
                 cnic: sampleTrans[i].cnic,
+                BeneficiaryID: sampleTrans[i].BeneficiaryID,
+                Name: sampleTrans[i].Name,
+                Address: sampleTrans[i].Address,
+                Phone: sampleTrans[i].Phone,
+                Reference: sampleTrans[i].Reference,
+                eligibleforZakat: sampleTrans[i].eligibleforZakat,
+                Income: sampleTrans[i].Income,
+                Occupation: sampleTrans[i].Occupation,
             }
             _this.cnicsTemp.push(a)
           	
@@ -145,6 +174,56 @@ export class HotelService {
      InitiateGetTransactions(frameTransactions); //passing mycallback as a method 
   }
 
+  getProfessionsFromServer(){
+    var InitiateGetTransactions = function(callback) // How can I use this callback?
+     {
+         var request = new XMLHttpRequest();
+         request.onreadystatechange = function()
+         {
+             if (request.readyState == 4 && request.status == 200)
+             {
+                 callback(request.responseText); // Another callback here
+             }
+             if (request.readyState == 4 && request.status == 0)
+             {
+                 //console.log("no response for resturants") // Another callback here
+             }
+         }; 
+         //console.log("sending _this.userIdTag to server", userIdTag)
+         request.open("POST", "https://api.anomoz.com/api/ngo-relief/post/read_all_professions.php");
+         request.send();
+     }
+     
+     var _this = this;
+     var frameTransactions = function mycallback(data) {
+      _this.professionsTemp = []
+       console.log("professions received from server," , data)
+       var dataParsed;
+       dataParsed = JSON.parse(data);
+       if(dataParsed.message=="none"){
+         //console.log("no bookings")
+       }
+       else{
+         var sampleTrans = dataParsed
+           //console.log(sampleTrans)
+           for (var i=0; i<sampleTrans.length; i++){
+            //check if hotel already
+              var a = {
+                id: sampleTrans[i].id,
+                title: sampleTrans[i].title,
+            }
+            _this.professionsTemp.push(a)
+          	
+          }
+          //add to local storage
+          _this.professions = _this.professionsTemp
+          console.log("professions updated", _this.professions)
+          //_this.storage.set('resturants', _this.hotels);
+       }
+     }
+     InitiateGetTransactions(frameTransactions); //passing mycallback as a method 
+  }
+
 
   storeSignupData(name, email, password, userIdTag){
     this.name = name;
@@ -176,6 +255,13 @@ export class HotelService {
 
   getUserLocation_lng(){
     return this.myLng
+  }
+
+  setImage(img){
+    this.base64img=img;
+  }
+  getImage(){
+    return this.base64img;
   }
   
 }

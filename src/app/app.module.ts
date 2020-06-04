@@ -18,13 +18,21 @@ import {Keyboard} from '@ionic-native/keyboard';
 import {HotelService} from "../providers/hotel-service";
 import {ionBookingApp} from "./app.component";
 import { MyDataServiceProvider } from '../providers/my-data-service/my-data-service';
-import { HotelPage } from "../pages/hotel/hotel";
+//import { HotelPage } from "../pages/hotel/hotel";
+import { HomePage } from "../pages/home/home";
+
 //import { BookingListPage } from '../pages/booking-list/booking-list';
 
 
-import { HotelPageModule } from '../pages/hotel/hotel.module';
+//import { HotelPageModule } from '../pages/hotel/hotel.module';
 import { IonicImageLoader } from 'ionic-image-loader';
 import { Device } from '@ionic-native/device';
+import { HomePageModule } from "../pages/home/home.module";
+
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+import { FilePath } from '@ionic-native/file-path/ngx';
+
 
 @NgModule({
   declarations: [
@@ -36,7 +44,7 @@ import { Device } from '@ionic-native/device';
   imports: [
     //HotelPage,
     //FavoriteListPage,
-    HotelPageModule,
+    HomePageModule,
     BrowserModule,
     HttpClientModule,
     IonicModule.forRoot(
@@ -58,7 +66,8 @@ import { Device } from '@ionic-native/device';
   bootstrap: [IonicApp],
   entryComponents: [
     ionBookingApp,
-    HotelPage,
+    //HotelPage,
+    HomePage,
     //BookingListPage
   ],
   providers: [
@@ -67,20 +76,14 @@ import { Device } from '@ionic-native/device';
     Keyboard,
     HotelService,
     Device,
-    //PlaceService,
-    //ActivityService,
-    //CarService,
-    //TripService,
-    //CarService,
-    //TripService,
-    //MessageService,
-    //WeatherProvider,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     MyDataServiceProvider,
     HttpModule,
     FileTransfer,
-    Geolocation
-    
+    Geolocation,
+    Camera,
+    File,
+    FilePath    
     ]
 })
 

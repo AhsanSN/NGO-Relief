@@ -5,6 +5,9 @@
       </ion-title>
       <ion-buttons end>
         <button ion-button (click)="about()">About</button>
+        <!--
+        <button ion-button (click)="addMarker()"><ion-icon name="add"></ion-icon>Add Marker</button>
+        -->
       </ion-buttons>
     </ion-navbar>
   </ion-header>
@@ -25,7 +28,7 @@
           <ion-input placeholder="CNIC" formControlName="cnic" (keyup)="searchCnic()"></ion-input>
         </ion-col>
       </ion-row>
-      <p id="cnicError" style="display: none;">CNIC exists in database.</p>
+      <p id="cnicError" (click)="autofill()" style="display: none;">CNIC exists in database. Click this to auto-fill values</p>
       <ion-row>
         <ion-col col-12>
           <ion-input placeholder="Phone Number" formControlName="phone"></ion-input>
@@ -38,22 +41,21 @@
       </ion-row>
       <ion-row>
         <ion-col col-12>
-          <ion-input placeholder="Profession" formControlName="profession"></ion-input>
+          <ion-select formControlName="profession" placeholder="Profession">
+            <ion-option *ngFor="let key of professions" value="{{key.id}}">{{key.title}}</ion-option>
+          </ion-select>
         </ion-col>
       </ion-row>
+      <!--
       <ion-row>
         <ion-col col-12>
           <ion-input placeholder="Number of family members" formControlName="nFamily"></ion-input>
         </ion-col>
       </ion-row>
+      -->
       <ion-row>
         <ion-col col-12>
           <ion-input placeholder="Reference" formControlName="reference"></ion-input>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-12>
-          <ion-input placeholder="Collection Center" formControlName="collectionCenter"></ion-input>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -69,23 +71,40 @@
       </ion-row>
       <ion-row>
         <ion-col col-12>
-          <!--
-          <ion-input placeholder="eligibleforZakat" formControlName="eligibleforZakat"></ion-input>
-          -->
-          <ion-select formControlName="CampaignID" placeholder="Campaign">
-            <ion-option *ngFor="let key of campaigns" value="{{key.CampaignID}}">{{key.title}}</ion-option>
-          </ion-select>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-12>
           <ion-input placeholder="Income" formControlName="income"></ion-input>
         </ion-col>
       </ion-row>
     </ion-grid>
 
+
+    <img [src]=base64img class="square" *ngIf="base64img!=''">
+      <div class="square" *ngIf="base64img==''">
+        <button class="camera-circle" ion-button style="z-index:20" (click)="imageCapturedGallery()">
+          <ion-icon name="images" style="color:#000 !important"></ion-icon>
+        </button>
+        <button class="camera-circle" ion-button style="z-index:20" (click)="imageCaptured()">
+          <ion-icon name="camera" style="color:#000 !important"></ion-icon>
+        </button>
+      </div>
+
+      <!--
+        margin-top:427px;
+
+      <div class="button-row">
+        <button class="zoom" ion-button icon-only style="margin-right:25%;float: left;" (click)="clear()" *ngIf="base64img!=''">
+          <ion-icon class="zoom-btn" name="close"></ion-icon>
+        </button>
+        <button class="zoom" ion-button icon-only style="margin-left:25%;float: right;" (click)="nextPage()"
+          *ngIf="base64img!=''">
+          <ion-icon class="zoom-btn" name="arrow-forward"></ion-icon>
+        </button>
+      </div>
+      -->
+
+
+
     <ion-row>
-      <button ion-button full color="dark" (click)="sendEntry(onLoginForm.get('name').value, onLoginForm.get('cnic').value, onLoginForm.get('phone').value, onLoginForm.get('address').value, onLoginForm.get('profession').value, onLoginForm.get('nFamily').value, onLoginForm.get('reference').value, onLoginForm.get('collectionCenter').value, onLoginForm.get('eligibleforZakat').value, onLoginForm.get('income').value,  onLoginForm.get('CampaignID').value)"><span class="text">Submit</span></button>    
+      <button ion-button full color="dark" (click)="sendEntry(onLoginForm.get('name').value, onLoginForm.get('cnic').value, onLoginForm.get('phone').value, onLoginForm.get('address').value, onLoginForm.get('profession').value, onLoginForm.get('reference').value, onLoginForm.get('eligibleforZakat').value, onLoginForm.get('income').value)"><span class="text">Submit</span></button>    
 
       <!--
       <ion-col col-8>
@@ -93,9 +112,12 @@
       </ion-col>
       <ion-col col-4>
       </ion-col>
-      -->
+      
+      <div #map id="map"></div> 
+      --> 
     </ion-row>
     
   </form>
+  
 
 </ion-content>

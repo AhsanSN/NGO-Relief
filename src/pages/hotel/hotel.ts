@@ -1,5 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {IonicPage, NavController, NavParams, ToastController, Platform, ActionSheetController} from "ionic-angular";
+import {Component, OnInit, ViewChild, ElementRef} from "@angular/core";
+import {IonicPage, NavController, NavParams, ToastController, Platform, ActionSheetController, LoadingController} from "ionic-angular";
 import {HotelService} from "../../providers/hotel-service";
 //import { File } from '@ionic-native/file/ngx';
 import { Geolocation } from "@ionic-native/geolocation";
@@ -7,7 +7,10 @@ import { App } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { BaseRequestOptions } from "@angular/http";
+import {Camera,CameraOptions} from '@ionic-native/camera';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 
+declare var google;
 
 @IonicPage({
   name: 'page-hotel',
@@ -21,6 +24,9 @@ import { BaseRequestOptions } from "@angular/http";
 })
 export class HotelPage implements OnInit{
 
+  @ViewChild('map') mapElement: ElementRef;
+  map: any;
+  
   public onLoginForm: FormGroup;
   //https://api.anomoz.com/api/ngo-relief/post/read_all_campaigns.php?orgId=4
   
@@ -28,15 +34,19 @@ export class HotelPage implements OnInit{
   lat: number = -22.9068;
   lng: number = -43.1729;
   cnics: any;
+  cnicsDetails: any;
   ngoName: string = "";
   collectionCenter = ""
   reference = ""
   event = ""
   eventId = ""
+  CampaignID = ""
   allEvents: any;
   campaigns: any= [];
+  professions: any= [];
+  base64img:string='';
 
-  constructor(public storage: Storage, public app: App, private _fb: FormBuilder, public nav: NavController, public navParams: NavParams, public hotelService: HotelService, public platform: Platform, public actionSheetController: ActionSheetController, public geo: Geolocation, public toastCtrl: ToastController, ) {
+  constructor(public storage: Storage, public app: App, private _fb: FormBuilder, public nav: NavController, public navParams: NavParams, public hotelService: HotelService, public platform: Platform, public actionSheetController: ActionSheetController, public geo: Geolocation, public toastCtrl: ToastController, private camera:Camera, private transfer: FileTransfer, public loadingCtrl: LoadingController,) {
     this.storage.get('ngo_relief_data_collected').then((val) => {
       if (val===null){
         console.log("no data found. Error!!!", val);
@@ -47,36 +57,19 @@ export class HotelPage implements OnInit{
         this.reference = val.reference;
         this.event = val.event;
         this.eventId = val.eventId;
+        this.CampaignID = val.CampaignID;
         this.onLoginForm.setValue({
          "name": "",
          "cnic": "",
          "phone": "",
          "address": "",
          "profession": "",
-         "nFamily": "",
          "collectionCenter":this.collectionCenter,
          "reference":this.reference,
          "eligibleforZakat": "",
          "income": "",
          "CampaignID":val.CampaignID
         })
-
-
-        this.allEvents = [];
-
-        for (var i=0; i<10; i++){
-          var eventTitle = "event " + i;
-          this.allEvents.push(
-            {
-              text: eventTitle,
-              role: 'destructive',
-              handler: () => {
-                this.changeEventMain(eventTitle, i);
-              }
-            }
-          )
-        }
-
 
       }
     }); 
@@ -99,9 +92,6 @@ export class HotelPage implements OnInit{
       profession: ["", Validators.compose([
         Validators.required
       ])],
-      nFamily: ["", Validators.compose([
-        Validators.required
-      ])],
       reference: [this.reference, Validators.compose([
         Validators.required
       ])],
@@ -114,7 +104,7 @@ export class HotelPage implements OnInit{
       income: ["", Validators.compose([
         Validators.required
       ])],
-      CampaignID: ["", Validators.compose([
+      CampaignID: [this.CampaignID, Validators.compose([
         Validators.required
       ])]
     });
@@ -128,7 +118,8 @@ export class HotelPage implements OnInit{
     }
   }
   
-  ionViewDidLoad() {    
+  ionViewDidLoad() {  
+    //this.loadMap()  
      this.getUserLocation();
         
     this.storage.get('userBasicInfo').then((val) => {
@@ -144,10 +135,12 @@ export class HotelPage implements OnInit{
     var _this22 = this;
     setTimeout(function(){
       _this22.campaigns = _this22.hotelService.campaigns
+      _this22.professions = _this22.hotelService.professions
     }, 1000);
 
     setTimeout(function(){
       _this22.campaigns = _this22.hotelService.campaigns
+      _this22.professions = _this22.hotelService.professions
     }, 2000);
 
     setTimeout(function(){
@@ -156,13 +149,24 @@ export class HotelPage implements OnInit{
         _this22.cnics.push(element.cnic);
       });
 
+      _this22.cnicsDetails = [];
+      _this22.hotelService.cnics.forEach(element => {
+        _this22.cnicsDetails.push(element);
+      });
+
       _this22.campaigns = _this22.hotelService.campaigns
+      _this22.professions = _this22.hotelService.professions
     }, 4000);
 
     setTimeout(function(){
       _this22.cnics = [];
       _this22.hotelService.cnics.forEach(element => {
         _this22.cnics.push(element.cnic);
+      });
+
+      _this22.cnicsDetails = [];
+      _this22.hotelService.cnics.forEach(element => {
+        _this22.cnicsDetails.push(element);
       });
     }, 8000);
 
@@ -180,8 +184,24 @@ export class HotelPage implements OnInit{
      });
     }
 
+    makeid(length) {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      return result;
+   }
 
-    sendEntry(name, cnic, phone, address, profession, nFamily, reference, collectionCenter, eligibleforZakat, income, CampaignID){
+    sendEntry(name, cnic, phone, address, profession, reference, eligibleforZakat, income){
+
+      var imageName = ""
+      if(this.base64img!=''){
+        imageName = this.makeid(10);
+        this.nextPage(imageName)
+      }
+      
 
       this.geo.getCurrentPosition().then((resp) => {
         console.log("location:", resp.coords.latitude, resp.coords.longitude)
@@ -192,16 +212,17 @@ export class HotelPage implements OnInit{
           "cnic": cnic,
           "address": address,
           "profession": profession,
-          "nFamily": nFamily,
+          "nFamily": "",
           "reference": reference,
-          "collectionCenter": collectionCenter,
+          "collectionCenter": this.collectionCenter,
           "lat": resp.coords.latitude,
           "lng": resp.coords.longitude,
           "event": this.event, 
           "eventId": this.eventId,
           "eligibleforZakat": eligibleforZakat, 
           "income": income,
-          "CampaignID": CampaignID
+          "CampaignID": this.CampaignID,
+          "imageName": imageName
         }
         console.log("details", details)
         this.storage.set('ngo_relief_data_collected', details);
@@ -250,7 +271,6 @@ export class HotelPage implements OnInit{
             "phone": "",
             "address": aboutUser.address,
             "profession": "",
-            "nFamily": "",
             "collectionCenter":aboutUser.collectionCenter,
             "reference":aboutUser.reference,
             "eligibleforZakat": "",
@@ -266,31 +286,169 @@ export class HotelPage implements OnInit{
       this.nav.push("page-about")
     }
 
-
-    changeEvent(){
-      console.log("changeEvent called")
-      this.showAllEvents()
+    imageCaptured(){
+      const options:CameraOptions={
+        quality:70,
+        destinationType:this.camera.DestinationType.DATA_URL,
+        encodingType:this.camera.EncodingType.JPEG,
+        mediaType:this.camera.MediaType.PICTURE
+      }
+      this.camera.getPicture(options).then((ImageData=>{
+         this.base64img="data:image/jpeg;base64,"+ImageData;
+      }),error=>{
+        console.log(error);
+      })
     }
   
-    async showAllEvents() {
-      console.log("this.allEvents", this.allEvents)
+    imageCapturedGallery(){
+      const options:CameraOptions={
+        quality:70,
+        destinationType:this.camera.DestinationType.DATA_URL,
+        sourceType:this.camera.PictureSourceType.PHOTOLIBRARY,
+        saveToPhotoAlbum:false
+      }
+      this.camera.getPicture(options).then((ImageData=>{
+         this.base64img="data:image/jpeg;base64,"+ImageData;
+      }),error=>{
+        console.log(error);
+      })
+    }
 
-      const actionSheet = await this.actionSheetController.create(
-        {
-        buttons: this.allEvents
+    nextPage(imagename){
+      this.hotelService.setImage(this.base64img);
+      //this.nav.push('IdentifyphotoPage');
+      this.uploadPic(imagename);
+    }
+
+    clear(){
+      this.base64img='';
+    }
+
+    uploadPic(imagename) {
+      this.base64img = this.hotelService.getImage();
+      let loader = this.loadingCtrl.create({
+        content: "Uploading...."
       });
-      await actionSheet.present();
-      
+      loader.present();
+  
+      const fileTransfer: FileTransferObject = this.transfer.create();
+  
+      let options: FileUploadOptions = {
+        fileKey: "photo",
+        fileName: imagename+".jpg",
+        chunkedMode: false,
+        mimeType: "image/jpeg",
+        headers: {}
+      }
+  
+      fileTransfer.upload(this.base64img, 'https://projects.anomoz.com/reliefDB/imageUpload.php', options).then(data => {
+        //alert(JSON.stringify(data));
+        loader.dismiss();
+      }, error => {
+        alert("error");
+        loader.dismiss();
+      });
+
     }
 
 
-    changeEventMain(event, eventId){
-      console.log("changeEventMain called", event, eventId)
-      this.event = event
-      this.eventId = eventId
-      
+    autofill(){
+      console.log("autofill called", this.cnics, this.cnicsDetails)
+      this.cnicsDetails.forEach((element, i) => {
+        if(this.onLoginForm.get('cnic').value== element.cnic){
+          console.log(element, i)
+          this.onLoginForm.setValue({
+            "name": element.Name,
+            "cnic": element.cnic,
+            "phone": element.Phone,
+            "address": element.Address,
+            "profession": element.Occupation,
+            "collectionCenter":this.collectionCenter,
+            "reference":element.Reference,
+            "eligibleforZakat": element.eligibleforZakat,
+            "income": element.Income,
+            "CampaignID":this.CampaignID
+           })
+        }
+        
+      });
     }
 
-   
+    loadMap(){
+
+      this.geo.getCurrentPosition().then((position) => {
+  
+        let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  
+        let mapOptions = {
+          center: latLng,
+          zoom: 15,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+  
+        this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+  
+      }, (err) => {
+        console.log(err);
+      });
+  
+    }
+
+    addMarker(){
+      let marker = new google.maps.Marker({
+        map: this.map,
+        draggable: true, 
+        animation: google.maps.Animation.DROP,
+        position: this.map.getCenter()
+      });
+    
+      let content = "<h4>Information!</h4>";          
+    
+      this.addInfoWindow(marker, content);
+
+      var this1 = this;
+      google.maps.event.addListener(marker, 'dragend', function() 
+      {
+        console.log("aa")
+          this1.geocodePosition(marker.getPosition());
+      });
+    
+    }
+
+    addInfoWindow(marker, content){
+
+      let infoWindow = new google.maps.InfoWindow({
+        content: content
+      });
+  
+      google.maps.event.addListener(marker, 'click', () => {
+        infoWindow.open(this.map, marker);
+      });
+  
+    }
+
+    
+
+    geocodePosition(pos) 
+    {
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode
+        ({
+            latLng: pos
+        }, 
+            function(results, status) 
+            {
+                if (status == google.maps.GeocoderStatus.OK) 
+                {
+                   console.log("results[0].formatted_address", results[0].formatted_address)
+                } 
+                else 
+                {
+                    console.log("err")
+                }
+            }
+        );
+}
+
 
 }
